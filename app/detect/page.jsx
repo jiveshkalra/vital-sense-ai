@@ -1,113 +1,170 @@
-'use client'
+"use client";
 
-import { useState, useRef, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { useRouter } from 'next/navigation'
-import { Upload, Loader, Stethoscope, AudioWaveform, Heart } from 'lucide-react'
-import { Button } from "@/components/ui/button"
-import { AudioPlayer } from 'react-audio-player-component'
-import { useToast } from "@/components/ui/use-toast"
-import call_lung_ai_api from '../actions/call_lung_ai_api'
+import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useRouter } from "next/navigation";
+import {
+  Upload,
+  Loader,
+  Stethoscope,
+  AudioWaveform,
+  Heart,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { AudioPlayer } from "react-audio-player-component";
+import { useToast } from "@/components/ui/use-toast";
+import call_lung_ai_api from "../actions/call_lung_ai_api";
+import { ExamplesSection } from "@/components/examples-section";
+import get_example_files_list from "../actions/get_example_files_list";
+
 export default function DetectPage() {
-  const fileInputRef = useRef(null)
-  const [file, setFile] = useState(null)
-  const [isLoading, setIsLoading] = useState(false)
-  const { toast } = useToast()
-  const router = useRouter()
-  const [audioVisualWidth, setAudioVisualWidth] = useState(0)
-
+  const fileInputRef = useRef(null);
+  const [file, setFile] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
+  const router = useRouter();
+  const [audioVisualWidth, setAudioVisualWidth] = useState(0);
+  const [exampleFiles, setExampleFiles] = useState([
+    {
+      id: "1",
+      name: "102_1b1_Ar_sc_Meditron.wav",
+      onClick: () => {
+        // Handle file selection
+        console.log("Selected example file 1");
+      },
+    },
+    {
+      id: "2",
+      name: "103_2b2_Ar_mc_LittC2SE.wav",
+      onClick: () => {
+        console.log("Selected example file 2");
+      },
+    },
+    {
+      id: "3",
+      name: "105_1b1_Tc_sc_Meditron.wav",
+      onClick: () => {
+        console.log("Selected example file 3");
+      },
+    },
+    {
+      id: "4",
+      name: "125_1b1_Tc_sc_Meditron.wav",
+      onClick: () => {
+        console.log("Selected example file 4");
+      },
+    },
+    {
+      id: "5",
+      name: "116_1b2_Tc_sc_Meditron.wav",
+      onClick: () => {
+        console.log("Selected example file 5");
+      },
+    },
+  ]);
   const calculateWidth = () => {
-    const maxWidth = 850
-    const padding = 32 // 2rem (p-8) * 2
-    const availableWidth = Math.min(window.innerWidth*.85 -padding, maxWidth)
-    return Math.max(availableWidth, 250) // Ensure a minimum width of 300px
-  }
-
+    const maxWidth = 850;
+    const padding = 32; // 2rem (p-8) * 2
+    const availableWidth = Math.min(
+      window.innerWidth * 0.85 - padding,
+      maxWidth
+    );
+    return Math.max(availableWidth, 250); // Ensure a minimum width of 300px
+  };
+  useEffect(() => {
+    get_example_files_list() .then((data) => {
+        console.log(data);
+        setExampleFiles(data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  },[]);
   useEffect(() => {
     const handleResize = () => {
-      setAudioVisualWidth(calculateWidth())
-    }
+      setAudioVisualWidth(calculateWidth());
+    };
 
-    handleResize() // Set initial width
-    window.addEventListener('resize', handleResize)
+    handleResize(); // Set initial width
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener('resize', handleResize)
-    }
-  }, [])
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const handleFileUpload = (event) => {
-    const uploadedFile = event.target.files?.[0]
-    if (uploadedFile && uploadedFile.type.startsWith('audio/')) {
-      setFile(uploadedFile)
+    const uploadedFile = event.target.files?.[0];
+    if (uploadedFile && uploadedFile.type.startsWith("audio/")) {
+      setFile(uploadedFile);
       toast({
         title: "File uploaded successfully",
         description: "Your audio file is ready for analysis.",
-      })
+      });
     } else {
       toast({
         title: "Invalid file type",
         description: "Please upload an audio file.",
         variant: "destructive",
-      })
+      });
     }
-  }
+  };
 
   const handleDragOver = (event) => {
-    event.preventDefault()
-    event.currentTarget.classList.add('border-primary')
-  }
+    event.preventDefault();
+    event.currentTarget.classList.add("border-primary");
+  };
 
   const handleDragLeave = (event) => {
-    event.preventDefault()
-    event.currentTarget.classList.remove('border-primary')
-  }
+    event.preventDefault();
+    event.currentTarget.classList.remove("border-primary");
+  };
 
   const handleDrop = (event) => {
-    event.preventDefault()
-    event.currentTarget.classList.remove('border-primary')
-    const droppedFile = event.dataTransfer.files[0]
-    if (droppedFile && droppedFile.type.startsWith('audio/')) {
-      setFile(droppedFile)
+    event.preventDefault();
+    event.currentTarget.classList.remove("border-primary");
+    const droppedFile = event.dataTransfer.files[0];
+    if (droppedFile && droppedFile.type.startsWith("audio/")) {
+      setFile(droppedFile);
       toast({
         title: "File uploaded successfully",
         description: "Your audio file is ready for analysis.",
-      })
+      });
     } else {
       toast({
         title: "Invalid file type",
         description: "Please upload an audio file.",
         variant: "destructive",
-      })
+      });
     }
-  }
+  };
 
   const handleDetectDisease = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     if (file) {
-      const formData = new FormData()
-      formData.append('file', file)
+      const formData = new FormData();
+      formData.append("file", file);
       try {
-        const res = await call_lung_ai_api(formData)  
-        console.log(res['data'][0]) 
-        router.push(`/detect/results?d=${res['data'][0]}`)
+        const res = await call_lung_ai_api(formData);
+        console.log(res["data"][0]);
+        router.push(`/detect/results?d=${res["data"][0]}`);
       } catch (error) {
-        console.error('Error:', error)
+        console.error("Error:", error);
       } finally {
-        setTimeout(()=>{
-          setIsLoading(false)
-        },250)
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 2000);
       }
     } else {
-      console.error('No file selected')
-      setIsLoading(false)
+      console.error("No file selected");
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground p-4 sm:p-8">
       <div className="max-w-4xl mx-auto">
-        <motion.div 
+        <motion.div
           className="text-center mb-8 sm:mb-12"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -133,8 +190,8 @@ export default function DetectPage() {
             <div className="flex items-center space-x-2 text-muted-foreground">
               <Heart className="h-5 w-5 text-red-500" />
               <span>Health Insights</span>
-            </div> 
-          </div> 
+            </div>
+          </div>
         </motion.div>
 
         <AnimatePresence mode="wait">
@@ -162,8 +219,12 @@ export default function DetectPage() {
                   className="hidden"
                 />
                 <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                <p className="mt-2 text-sm text-gray-500">Drag and drop your audio file here, or click to select a file</p>
-                <p className="mt-1 text-xs text-gray-400">Supported formats: WAV, MP3, M4A</p>
+                <p className="mt-2 text-sm text-gray-500">
+                  Drag and drop your audio file here, or click to select a file
+                </p>
+                <p className="mt-1 text-xs text-gray-400">
+                  Supported formats: WAV, MP3, M4A
+                </p>
               </div>
             </motion.div>
           )}
@@ -176,7 +237,7 @@ export default function DetectPage() {
               exit={{ opacity: 0, scale: 0.8 }}
               transition={{ duration: 0.5 }}
               className="mb-6"
-            >  
+            >
               <div className="bg-white p-4 rounded-lg shadow-md">
                 <AudioPlayer
                   src={URL.createObjectURL(file)}
@@ -196,7 +257,9 @@ export default function DetectPage() {
                   volumeControlColor="#4ade80"
                   hideSeekBar={true}
                 />
-                <p className="mt-2 text-sm text-center text-gray-500">{file.name}</p>
+                <p className="mt-2 text-sm text-center text-gray-500">
+                  {file.name}
+                </p>
               </div>
             </motion.div>
           )}
@@ -207,12 +270,12 @@ export default function DetectPage() {
             transition={{ delay: 0.3 }}
             className="text-center"
           >
-            <Button 
+            <Button
               className="bg-gradient-to-r from-red-500 to-blue-500 text-white px-6 py-3 sm:px-8 sm:py-4 text-base sm:text-lg rounded-full hover:shadow-lg transition-all duration-300"
               onClick={handleDetectDisease}
               disabled={!file}
             >
-              {file ? 'Detect Disease' : 'Upload an audio file to begin'}
+              {file ? "Detect Disease" : "Upload an audio file to begin"}
             </Button>
           </motion.div>
 
@@ -228,13 +291,15 @@ export default function DetectPage() {
               <div className="text-center">
                 <Loader className="animate-spin h-12 w-12 mx-auto mb-4 text-primary" />
                 <p className="text-lg font-semibold">Analyzing audio...</p>
-                <p className="text-sm text-muted-foreground">This will just take a moment</p>
+                <p className="text-sm text-muted-foreground">
+                  This will just take a moment
+                </p>
               </div>
             </motion.div>
           )}
+          <ExamplesSection files={exampleFiles} className="mt-8" />
         </AnimatePresence>
       </div>
     </div>
-  )
+  );
 }
-
