@@ -1,14 +1,10 @@
 'use client'
 
-import { motion } from 'framer-motion'
-import { ThemeToggle } from '@/components/theme-toggle'
+import { motion } from 'framer-motion' 
 
 export default function ResultsPage() {
   return (
-    <div className="min-h-screen bg-background text-foreground p-8">
-      <div className="absolute top-4 right-4 z-50">
-        <ThemeToggle />
-      </div>
+    <div className="min-h-screen bg-background text-foreground p-8"> 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
