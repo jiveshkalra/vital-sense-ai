@@ -35,8 +35,7 @@ export default function Features() {
   })
 
   return (
-    
-    <section className="py-12 md:py-20 px-4 m-4 sm:m-10 md:m-20" ref={ref}>
+    <section className="py-12 md:py-20 px-4" ref={ref}>
       <motion.h2 
         className="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12"
         initial={{ opacity: 0, y: 20 }}
