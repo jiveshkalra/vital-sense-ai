@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react'
-import Image from 'next/image'
 import { motion } from 'framer-motion'
 import confetti from 'canvas-confetti'
 import { DiseaseInfo } from '@/lib/diseaseInfo'
-import { Heart, Award, Zap, Sun } from 'lucide-react'
- 
+import { Heart, Award, Zap, Sun, CheckCircle } from 'lucide-react'
+  
+
 export const HealthyResult = ({ info }) => {
   useEffect(() => {
     confetti({
@@ -19,35 +19,32 @@ export const HealthyResult = ({ info }) => {
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5 }}
-      className="bg-gradient-to-br from-green-50 to-blue-50 rounded-lg shadow-lg overflow-hidden"
+      className="bg-gradient-to-br from-green-100 to-blue-100 rounded-lg shadow-lg overflow-hidden"
     >
-      <div className="relative h-64">
-        <Image
-          src={info.image}
-          alt="Healthy Lungs"
-          layout="fill"
-          objectFit="cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-green-600 to-transparent" />
-        <div className="absolute bottom-0 left-0 p-4">
-          <h2 className="text-3xl font-bold text-white">{info.heading}</h2>
-        </div>
-      </div>
       <div className="p-6">
+        <motion.div
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+          className="flex items-center justify-center mb-6"
+        >
+          <CheckCircle className="text-green-500 w-16 h-16 mr-4" />
+          <h2 className="text-3xl font-bold text-green-700">{info.heading}</h2>
+        </motion.div>
         <motion.p 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-          className="text-gray-700 mb-4"
+          transition={{ delay: 0.4, duration: 0.5 }}
+          className="text-gray-700 mb-6 text-center text-lg"
         >
           {info.description}
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
+          transition={{ delay: 0.6, duration: 0.5 }}
         >
-          <h3 className="text-2xl font-semibold mb-4 flex items-center">
+          <h3 className="text-2xl font-semibold mb-4 text-center flex items-center justify-center">
             <Heart className="mr-2 text-red-500" />
             Tips for Maintaining Healthy Lungs
           </h3>
@@ -73,3 +70,4 @@ export const HealthyResult = ({ info }) => {
     </motion.div>
   )
 }
+
