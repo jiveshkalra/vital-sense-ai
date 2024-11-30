@@ -181,7 +181,7 @@ export default function DetectPage() {
         >
           <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-4">
             <span className="bg-gradient-to-r from-red-500 to-blue-500 text-transparent bg-clip-text">
-              VitalSenseAI
+              <a href="/">  VitalSenseAI </a>
             </span>
           </h1>
           <p className="text-lg sm:text-xl text-muted-foreground mb-6">

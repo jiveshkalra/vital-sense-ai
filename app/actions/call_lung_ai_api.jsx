@@ -12,7 +12,7 @@ export default async function call_lung_ai_api(formData) {
     const buffer = Buffer.from(arrayBuffer)
 
     // Connect to Gradio API and send the audio file
-    const client = await Client.connect("http://127.0.0.1:7860/")
+    const client = await Client.connect("jiveshkalra/LungDiseaseDetector")
     const result = await client.predict("/predict", { audio_data: buffer })
     console.log(result)
     return { data: result.data }

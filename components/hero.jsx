@@ -8,7 +8,7 @@ export default function Hero() {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0 z-0">
-        <video
+        {/* <video
           autoPlay
           loop
           muted
@@ -16,7 +16,7 @@ export default function Hero() {
           className="object-cover w-full h-full opacity-30 dark:opacity-20"
         >
           <source src="/background-video.mp4" type="video/mp4" />
-        </video>
+        </video> */}
       </div>
       <div className="z-10 text-center space-y-6 md:space-y-8 px-4 max-w-4xl mx-auto">
         <motion.h1 
