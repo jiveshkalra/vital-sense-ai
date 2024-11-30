@@ -28,6 +28,7 @@
     "wavesurfer.js": "^7.8.9"
   },
   "devDependencies": {
+    "@gradio/client": "^1.8.0",
     "@types/node": "22.10.1",
     "@types/react": "18.3.12",
     "eslint": "^8",

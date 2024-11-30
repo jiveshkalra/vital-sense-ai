@@ -7,7 +7,7 @@ import { Upload, Loader, Stethoscope, AudioWaveform, Heart } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { AudioPlayer } from 'react-audio-player-component'
 import { useToast } from "@/components/ui/use-toast"
-
+import call_lung_ai_api from '../actions/call_lung_ai_api'
 export default function DetectPage() {
   const fileInputRef = useRef(null)
   const [file, setFile] = useState(null)
@@ -82,11 +82,26 @@ export default function DetectPage() {
     }
   }
 
-  const handleDetectDisease = () => {
+  const handleDetectDisease = async () => {
     setIsLoading(true)
-    // Simulating API call 
-    // setIsLoading(false)
-    // router.push('/detect/results') 
+    if (file) {
+      const formData = new FormData()
+      formData.append('file', file)
+      try {
+        const res = await call_lung_ai_api(formData)  
+        console.log(res['data'][0]) 
+        router.push(`/detect/results?d=${res['data'][0]}`)
+      } catch (error) {
+        console.error('Error:', error)
+      } finally {
+        setTimeout(()=>{
+          setIsLoading(false)
+        },250)
+      }
+    } else {
+      console.error('No file selected')
+      setIsLoading(false)
+    }
   }
 
   return (
