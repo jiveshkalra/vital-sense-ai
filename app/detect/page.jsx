@@ -1,15 +1,17 @@
 'use client'
 
-import { useState } from 'react'
+import { useState,useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/navigation'
-import { Upload, Loader, Stethoscope, Waveform, Heart } from 'lucide-react'
+import { Upload, Loader, Stethoscope, AudioWaveform , Heart } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/components/ui/use-toast" 
 import { AudioVisualizer } from '@/components/audio-visualizer'
 
 export default function DetectPage() {
-  const [file, setFile] = useState<File | null>(null)
+  const fileInputRef = useRef(null)
+  
+  const [file, setFile] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const { toast } = useToast()
   const router = useRouter()
@@ -87,20 +89,20 @@ export default function DetectPage() {
           <p className="text-xl text-muted-foreground mb-6">
             Upload your lung sound recording for instant AI-powered analysis
           </p>
-          <div className="flex justify-center space-x-8 mb-8">
+        <div className="flex justify-center space-x-8 mb-8">
             <div className="flex items-center space-x-2 text-muted-foreground">
               <Stethoscope className="h-5 w-5 text-red-500" />
               <span>Advanced Detection</span>
             </div>
             <div className="flex items-center space-x-2 text-muted-foreground">
-              <Waveform className="h-5 w-5 text-blue-500" />
+              <AudioWaveform className="h-5 w-5 text-blue-500" />
               <span>Sound Analysis</span>
             </div>
             <div className="flex items-center space-x-2 text-muted-foreground">
               <Heart className="h-5 w-5 text-red-500" />
               <span>Health Insights</span>
-            </div>
-          </div>
+            </div> 
+          </div> 
         </motion.div>
 
         <AnimatePresence mode="wait">
@@ -120,6 +122,7 @@ export default function DetectPage() {
                 onClick={() => document.getElementById('fileInput')?.click()}
               >
                 <input
+                  ref={fileInputRef}
                   id="fileInput"
                   type="file"
                   accept="audio/*"
