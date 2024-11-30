@@ -1,20 +1,40 @@
 'use client'
 
-import { useState,useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/navigation'
-import { Upload, Loader, Stethoscope, AudioWaveform , Heart } from 'lucide-react'
+import { Upload, Loader, Stethoscope, AudioWaveform, Heart } from 'lucide-react'
 import { Button } from "@/components/ui/button"
-import { useToast } from "@/components/ui/use-toast" 
-import { AudioVisualizer } from '@/components/audio-visualizer'
+import { AudioPlayer } from 'react-audio-player-component'
+import { useToast } from "@/components/ui/use-toast"
 
 export default function DetectPage() {
   const fileInputRef = useRef(null)
-  
   const [file, setFile] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const { toast } = useToast()
   const router = useRouter()
+  const [audioVisualWidth, setAudioVisualWidth] = useState(0)
+
+  const calculateWidth = () => {
+    const maxWidth = 850
+    const padding = 32 // 2rem (p-8) * 2
+    const availableWidth = Math.min(window.innerWidth*.85 -padding, maxWidth)
+    return Math.max(availableWidth, 250) // Ensure a minimum width of 300px
+  }
+
+  useEffect(() => {
+    const handleResize = () => {
+      setAudioVisualWidth(calculateWidth())
+    }
+
+    handleResize() // Set initial width
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
 
   const handleFileUpload = (event) => {
     const uploadedFile = event.target.files?.[0]
@@ -64,32 +84,29 @@ export default function DetectPage() {
 
   const handleDetectDisease = () => {
     setIsLoading(true)
-    // Simulating API call
-    setTimeout(() => {
-      setIsLoading(false)
-      router.push('/detect/results')
-    }, 3000)
+    // Simulating API call 
+    // setIsLoading(false)
+    // router.push('/detect/results') 
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground p-8">
- 
+    <div className="min-h-screen bg-background text-foreground p-4 sm:p-8">
       <div className="max-w-4xl mx-auto">
         <motion.div 
-          className="text-center mb-12"
+          className="text-center mb-8 sm:mb-12"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h1 className="text-4xl md:text-6xl font-bold mb-4">
+          <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-4">
             <span className="bg-gradient-to-r from-red-500 to-blue-500 text-transparent bg-clip-text">
               VitalSenseAI
             </span>
           </h1>
-          <p className="text-xl text-muted-foreground mb-6">
+          <p className="text-lg sm:text-xl text-muted-foreground mb-6">
             Upload your lung sound recording for instant AI-powered analysis
           </p>
-        <div className="flex justify-center space-x-8 mb-8">
+          <div className="flex flex-wrap justify-center gap-4 sm:gap-8 mb-8">
             <div className="flex items-center space-x-2 text-muted-foreground">
               <Stethoscope className="h-5 w-5 text-red-500" />
               <span>Advanced Detection</span>
@@ -113,17 +130,17 @@ export default function DetectPage() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
               transition={{ duration: 0.5 }}
+              className="mb-6"
             >
               <div
-                className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center cursor-pointer hover:border-primary transition-colors duration-300 bg-white"
+                className="border-2 border-dashed border-gray-300 rounded-lg p-8 sm:p-12 text-center cursor-pointer hover:border-primary transition-colors duration-300 bg-white"
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
-                onClick={() => document.getElementById('fileInput')?.click()}
+                onClick={() => fileInputRef.current?.click()}
               >
                 <input
                   ref={fileInputRef}
-                  id="fileInput"
                   type="file"
                   accept="audio/*"
                   onChange={handleFileUpload}
@@ -143,26 +160,46 @@ export default function DetectPage() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
               transition={{ duration: 0.5 }}
-            >
-              <AudioVisualizer 
-                file={file} 
-                onRemove={() => setFile(null)} 
-              />
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="mt-6 text-center"
-              >
-                <Button 
-                  className="bg-gradient-to-r from-red-500 to-blue-500 text-white px-8 py-6 text-lg rounded-full hover:shadow-lg transition-all duration-300"
-                  onClick={handleDetectDisease}
-                >
-                  Detect Disease
-                </Button>
-              </motion.div>
+              className="mb-6"
+            >  
+              <div className="bg-white p-4 rounded-lg shadow-md">
+                <AudioPlayer
+                  src={URL.createObjectURL(file)}
+                  minimal={false}
+                  width={audioVisualWidth}
+                  trackHeight={80}
+                  barWidth={2}
+                  gap={1}
+                  visualise={true}
+                  backgroundColor="#FFF"
+                  barColor="#06b6d4"
+                  barPlayedColor="#ef4444"
+                  skipDuration={2}
+                  showLoopOption={false}
+                  showVolumeControl={true}
+                  seekBarColor="#FFF"
+                  volumeControlColor="#4ade80"
+                  hideSeekBar={true}
+                />
+                <p className="mt-2 text-sm text-center text-gray-500">{file.name}</p>
+              </div>
             </motion.div>
           )}
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="text-center"
+          >
+            <Button 
+              className="bg-gradient-to-r from-red-500 to-blue-500 text-white px-6 py-3 sm:px-8 sm:py-4 text-base sm:text-lg rounded-full hover:shadow-lg transition-all duration-300"
+              onClick={handleDetectDisease}
+              disabled={!file}
+            >
+              {file ? 'Detect Disease' : 'Upload an audio file to begin'}
+            </Button>
+          </motion.div>
 
           {isLoading && (
             <motion.div
