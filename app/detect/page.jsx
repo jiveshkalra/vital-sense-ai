@@ -297,7 +297,7 @@ export default function DetectPage() {
               </div>
             </motion.div>
           )}
-          <ExamplesSection files={exampleFiles} className="mt-8" />
+          <ExamplesSection files={exampleFiles} className="mt-8" setFile={setFile}/>
         </AnimatePresence>
       </div>
     </div>

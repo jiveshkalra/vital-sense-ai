@@ -1,10 +1,17 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { cn } from "@/lib/utils"
- 
+import { cn } from "@/lib/utils"  
 
-export function ExamplesSection({ files, className }) {
+const fetch_audio_from_url =async (url) =>{
+  // 1. Fetch the audio from URL
+  // 2. Make it a blob
+  // 3. return the blob
+
+  const audio_blob = await fetch(url).then((res) => res.blob());
+  return audio_blob;
+}
+export function ExamplesSection({ files, className,setFile }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -29,7 +36,7 @@ export function ExamplesSection({ files, className }) {
         {files.map((file) => (
           <motion.button
             key={file.id}
-            onClick={file.onClick}
+            onClick={() => setFile(fetch_audio_from_url(file.audio_path))}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             className={cn(
