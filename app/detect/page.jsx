@@ -93,8 +93,12 @@ export default function DetectPage() {
     };
   }, []); 
   const handleFilesFromExamples =async (response) =>{
+      setFile(null)
       let file = await response 
+      setTimeout(() => {
+
       setFile(file)
+      },500)
 
   }
   const handleFileUpload = (event) => {
@@ -269,7 +273,8 @@ export default function DetectPage() {
               </div>
             </motion.div>
           )}
-
+          </AnimatePresence>
+          <AnimatePresence mode="wait">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -285,6 +290,8 @@ export default function DetectPage() {
             </Button>
           </motion.div>
 
+          </AnimatePresence>
+          <AnimatePresence mode="wait">
           {isLoading && (
             <motion.div
               key="loading"
@@ -303,6 +310,9 @@ export default function DetectPage() {
               </div>
             </motion.div>
           )}
+          </AnimatePresence>
+          
+        <AnimatePresence mode="wait">
           <ExamplesSection files={exampleFiles} className="mt-8" sendDataToParent={handleFilesFromExamples}/>
         </AnimatePresence>
       </div>
