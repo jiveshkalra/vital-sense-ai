@@ -1,8 +1,9 @@
 import * as React from "react"
  
+
 const TOAST_LIMIT = 1
 const TOAST_REMOVE_DELAY = 1000000
- 
+
 const actionTypes = {
   ADD_TOAST: "ADD_TOAST",
   UPDATE_TOAST: "UPDATE_TOAST",
@@ -16,7 +17,7 @@ function genId() {
   count = (count + 1) % Number.MAX_VALUE
   return count.toString()
 }
-   
+  
 const toastTimeouts = new Map()
 
 const addToRemoveQueue = (toastId) => {
@@ -35,7 +36,7 @@ const addToRemoveQueue = (toastId) => {
   toastTimeouts.set(toastId, timeout)
 }
 
-export const reducer = (state, action)=> {
+export const reducer = (state , action ) => {
   switch (action.type) {
     case "ADD_TOAST":
       return {
@@ -90,17 +91,16 @@ export const reducer = (state, action)=> {
   }
 }
 
-const listeners= []
- 
-let memoryState  = { toasts: [] }
+const listeners = []
+
+let memoryState = { toasts: [] }
 
 function dispatch(action) {
   memoryState = reducer(memoryState, action)
   listeners.forEach((listener) => {
     listener(memoryState)
   })
-}
- 
+} 
 function toast({ ...props }) {
   const id = genId()
 
@@ -131,7 +131,7 @@ function toast({ ...props }) {
 }
 
 function useToast() {
-  const [state, setState] = React.useState<State>(memoryState)
+  const [state, setState] =  React.useState(memoryState)
 
   React.useEffect(() => {
     listeners.push(setState)
