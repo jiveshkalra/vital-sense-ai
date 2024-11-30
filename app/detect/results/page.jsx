@@ -1,7 +1,7 @@
 'use client'
 
 import { useSearchParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import {  useState ,Suspense} from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { diseaseInfo } from '@/lib/diseaseInfo'
 import { DiseaseInfoCard } from '@/components/DiseaseInfoCard'
@@ -9,25 +9,29 @@ import { HealthyResult } from '@/components/HealthyResult'
 import LoadingAnimation from '@/components/LoadingAnimation'
 import { AlertTriangle, Activity, User } from 'lucide-react'
 import { Button } from "@/components/ui/button"
-import Link from 'next/link'
+import Link from 'next/link' 
 
 export default function ResultsPage() {
-  const searchParams = useSearchParams()
   const [result, setResult] = useState(null)
   const [loading, setLoading] = useState(true) 
-
-  useEffect(() => {
+  const GetDiseaseQuery = ()=>{ 
+    const searchParams = useSearchParams()
     const disease = searchParams.get('d')
-    if (disease && disease in diseaseInfo) {  
-      setResult(diseaseInfo[disease])
-      setLoading(false) 
-    } else {
-      setLoading(false)
+      if (disease && disease in diseaseInfo) {  
+        setResult(diseaseInfo[disease])
+        setLoading(false) 
+      } else {
+        setLoading(false)
+      }
     }
-  }, [searchParams])
 
   if (loading) {
-    return <LoadingAnimation />
+    return <>
+       <LoadingAnimation />
+      <Suspense>
+        <GetDiseaseQuery/>
+      </Suspense>
+    </>
   }
 
   if (!result) {
