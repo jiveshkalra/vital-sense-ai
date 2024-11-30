@@ -3,15 +3,26 @@
 import { motion } from 'framer-motion'
 import { cn } from "@/lib/utils"  
 
-const fetch_audio_from_url =async (url) =>{
-  // 1. Fetch the audio from URL
-  // 2. Make it a blob
-  // 3. return the blob
+const fetch_audio_as_file = async (url) => {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("Failed to fetch audio");
 
-  const audio_blob = await fetch(url).then((res) => res.blob());
-  return audio_blob;
-}
-export function ExamplesSection({ files, className,setFile }) {
+    // Convert response to Blob and then to File
+    const blob = await response.blob();
+    const file = new File([blob], "audio_file.wav", { type: "audio/wav" });
+ 
+    if (!(file instanceof Blob)) {
+      throw new Error("Invalid file format");
+    } 
+    return file
+  } catch (e) {
+    console.error("Error fetching or processing audio:", e);
+    return null;
+  }
+};
+
+export function ExamplesSection({ files, className,sendDataToParent }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -36,7 +47,7 @@ export function ExamplesSection({ files, className,setFile }) {
         {files.map((file) => (
           <motion.button
             key={file.id}
-            onClick={() => setFile(fetch_audio_from_url(file.audio_path))}
+            onClick={() => sendDataToParent(fetch_audio_as_file(file.audio_path))}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             className={cn(

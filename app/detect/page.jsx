@@ -19,7 +19,7 @@ import get_example_files_list from "../actions/get_example_files_list";
 
 export default function DetectPage() {
   const fileInputRef = useRef(null);
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState(null); 
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
@@ -71,7 +71,7 @@ export default function DetectPage() {
     );
     return Math.max(availableWidth, 250); // Ensure a minimum width of 300px
   };
-  useEffect(() => {
+  useEffect(() => { 
     get_example_files_list() .then((data) => {
         console.log(data);
         setExampleFiles(data);
@@ -91,12 +91,17 @@ export default function DetectPage() {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, []); 
+  const handleFilesFromExamples =async (response) =>{
+      let file = await response 
+      setFile(file)
 
+  }
   const handleFileUpload = (event) => {
     const uploadedFile = event.target.files?.[0];
     if (uploadedFile && uploadedFile.type.startsWith("audio/")) {
       setFile(uploadedFile);
+      console.log(uploadedFile);
       toast({
         title: "File uploaded successfully",
         description: "Your audio file is ready for analysis.",
@@ -238,9 +243,10 @@ export default function DetectPage() {
               transition={{ duration: 0.5 }}
               className="mb-6"
             >
-              <div className="bg-white p-4 rounded-lg shadow-md">
+              <div className="bg-white p-4 rounded-lg shadow-md"> 
+
                 <AudioPlayer
-                  src={URL.createObjectURL(file)}
+                  src={ URL.createObjectURL(file)}
                   minimal={false}
                   width={audioVisualWidth}
                   trackHeight={80}
@@ -297,7 +303,7 @@ export default function DetectPage() {
               </div>
             </motion.div>
           )}
-          <ExamplesSection files={exampleFiles} className="mt-8" setFile={setFile}/>
+          <ExamplesSection files={exampleFiles} className="mt-8" sendDataToParent={handleFilesFromExamples}/>
         </AnimatePresence>
       </div>
     </div>
