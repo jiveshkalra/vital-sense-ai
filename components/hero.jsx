@@ -1,8 +1,18 @@
-'use client'
+'use client';
+
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { Heart } from 'lucide-react'
+
+const heartBeat = {
+  scale: [1, 1.2, 1],
+  transition: {
+    duration: 0.8,
+    repeat: Infinity,
+    repeatType: "reverse"
+  }
+}
 
 export default function Hero() {
   return (
@@ -45,7 +55,12 @@ export default function Hero() {
           <Button asChild className="bg-gradient-to-r from-red-500 to-blue-500 text-white text-base md:text-lg py-4 md:py-6 px-6 md:px-8 rounded-full hover:shadow-lg hover:shadow-red-500/50 transition-all duration-300 group">
             <Link href="/detect">
               Experience VitalSenseAI
-              <Heart className="ml-2 inline-block transition-transform group-hover:scale-125" />
+              <motion.div
+                className="inline-block ml-2"
+                animate={heartBeat}
+              >
+                <Heart className="transition-transform group-hover:scale-125" />
+              </motion.div>
             </Link>
           </Button>
         </motion.div>

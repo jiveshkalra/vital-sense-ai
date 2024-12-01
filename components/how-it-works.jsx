@@ -46,6 +46,13 @@ const cardVariants = {
       stiffness: 100,
       damping: 12
     }
+  },
+  hover: {
+    scale: 1.05,
+    boxShadow: "0 10px 20px rgba(0,0,0,0.1)",
+    transition: {
+      duration: 0.3
+    }
   }
 }
 
@@ -69,8 +76,8 @@ export default function HowItWorks() {
         viewport={{ once: true, amount: 0.2 }}
       >
         {steps.map((step, index) => (
-          <motion.div key={index} variants={cardVariants}>
-            <Card className="bg-card hover:shadow-md transition-all duration-300 hover:scale-105">
+          <motion.div key={index} variants={cardVariants} whileHover="hover">
+            <Card className="bg-card transition-all duration-300">
               <CardHeader>
                 <motion.div 
                   className="w-12 h-12 rounded-full bg-red-500 flex items-center justify-center mb-4 animate-pulse-glow"

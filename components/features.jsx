@@ -52,7 +52,7 @@ export default function Features() {
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: index * 0.1, duration: 0.6 }}
           >
-            <Card className="bg-card hover:shadow-md transition-all duration-300 hover:scale-105">
+            <Card className="bg-card hover:shadow-md transition-all duration-300 hover:scale-105 hover:bg-gradient-to-br from-red-50 to-blue-50">
               <CardHeader>
                 <motion.div 
                   className="w-12 h-12 rounded-full bg-red-500 flex items-center justify-center mb-4"
