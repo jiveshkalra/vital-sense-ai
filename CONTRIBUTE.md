@@ -35,9 +35,6 @@ Thank you for your interest in contributing to VitalSenseAI! We welcome contribu
    - Go to the original repository and open a Pull Request from your branch.
    - Provide a clear description of your changes and reference any related issues.
 
-## Code of Conduct
-
-Please be respectful and considerate in your communications and contributions. See [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) if available.
 
 ## Reporting Issues
 
