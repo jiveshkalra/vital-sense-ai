@@ -202,6 +202,12 @@ export default function DetectPage() {
               <span>Health Insights</span>
             </div>
           </div>
+          {/* NOTE about cold start */}
+        <div className="mt-8 text-center">
+          <div className="inline-block bg-yellow-100 border border-yellow-300 text-yellow-800 text-xs rounded px-4 py-2">
+            <strong>Note:</strong> If you run the detection for the first time, it may take a while (and possibly fail) as the HuggingFace Space is cold starting. By the second run, it should work smoothly.
+          </div>
+        </div>
         </motion.div>
 
         <AnimatePresence mode="wait">
@@ -316,6 +322,7 @@ export default function DetectPage() {
         <AnimatePresence mode="wait">
           <ExamplesSection files={exampleFiles} className="mt-8" sendDataToParent={handleFilesFromExamples}/>
         </AnimatePresence>
+        
       </div>
     </div>
   );
