@@ -45,7 +45,7 @@ This repo contains the full-stack Next.js web application for VitalSenseAI, incl
 
 ### Prerequisites
 - [Node.js](https://nodejs.org/) (v18+ recommended)
-- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
+- [npm](https://www.npmjs.com/) 
 
 ### Installation
 
