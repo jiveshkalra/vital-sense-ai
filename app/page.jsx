@@ -7,12 +7,9 @@ import { ScrollToTop } from '@/components/scroll-to-top'
 export default function Home() {
   return (
     <main className="min-h-screen bg-background text-foreground"> 
-     
-        
         <Hero />
         <Features />
-        <HowItWorks /> 
-        
+        <HowItWorks />  
         <CTA /> 
         <ScrollToTop />  
     </main>
